@@ -1,7 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity } from 'react-native';
 
-export default function ProfileScreen({ onLogout }: any) {
+type ProfileScreenProps = {
+  onLogout: () => void;
+};
+
+export default function ProfileScreen({ onLogout }: ProfileScreenProps) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>

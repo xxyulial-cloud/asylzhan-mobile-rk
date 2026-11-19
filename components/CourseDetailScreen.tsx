@@ -1,7 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity } from 'react-native';
+import { Course } from './CoursesScreen';
 
-export default function CourseDetailScreen({ onBack }: any) {
+type CourseDetailScreenProps = {
+  course: Course | null;
+  onBack: () => void;
+};
+
+export default function CourseDetailScreen({ course, onBack }: CourseDetailScreenProps) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
@@ -9,8 +15,10 @@ export default function CourseDetailScreen({ onBack }: any) {
           <Text style={styles.backText}>← Артқа қайту</Text>
         </TouchableOpacity>
         
-        <Text style={styles.title}>Web-бағдарламалау фреймворктары</Text>
-        <Text style={styles.desc}>Бұл курста React және React Native көмегімен мобильді және веб қосымшаларды жасауды үйренесіз.</Text>
+        <Text style={styles.title}>{course?.title ?? 'Курс'}</Text>
+        <Text style={styles.desc}>
+          {course ? `${course.code} пәнін оқытушы ${course.teacher} жүргізеді. Бұл курста практикалық тапсырмалар мен теориялық материалдар қарастырылады.` : 'Курс туралы ақпарат табылмады.'}
+        </Text>
 
         <View style={styles.moduleBox}>
           <Text style={styles.moduleTitle}>Материалдар:</Text>

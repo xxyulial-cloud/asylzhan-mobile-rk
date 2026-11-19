@@ -2,12 +2,21 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
 import Login from './components/Login';
 import Signup from './components/Signup';
+import Home from './components/Home';
+import CoursesScreen, { Course } from './components/CoursesScreen';
+import CourseDetailScreen from './components/CourseDetailScreen';
+import GradesScreen from './components/GradesScreen';
+import ScheduleScreen from './components/ScheduleScreen';
+import NotificationsScreen from './components/NotificationsScreen';
+import ProfileScreen from './components/ProfileScreen';
 
 const { height } = Dimensions.get('window');
 
 export default function App() {
-  const [screen, setScreen] = useState('splash'); // 'splash', 'onboarding', 'login', 'signup'
+  const [screen, setScreen] = useState<'splash' | 'onboarding' | 'login' | 'signup' | 'main' | 'courseDetail'>('splash');
   const [step, setStep] = useState(0);
+  const [activeTab, setActiveTab] = useState<'home' | 'courses' | 'grades' | 'schedule' | 'notifications' | 'profile'>('home');
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
 
   const slides = [
     { title: "Better way to learning is calling you!", subtitle: "Unlock Your Potential. Embrace Education." },
@@ -50,16 +59,77 @@ export default function App() {
       )}
 
       {screen === 'login' && (
-        <Login 
-          onSwitchToSignup={() => setScreen('signup')} 
-          onBackToHome={() => setScreen('splash')} 
+        <Login
+          onLogin={() => setScreen('main')}
+          onSwitchToSignup={() => setScreen('signup')}
+          onBackToHome={() => setScreen('splash')}
         />
       )}
 
       {screen === 'signup' && (
-        <Signup 
-          onSwitchToLogin={() => setScreen('login')} 
-          onBackToHome={() => setScreen('splash')} 
+        <Signup
+          onSwitchToLogin={() => setScreen('login')}
+          onBackToHome={() => setScreen('splash')}
+          onSignup={() => setScreen('login')}
+        />
+      )}
+
+      {screen === 'main' && (
+        <View style={styles.appContainer}>
+          <View style={styles.mainContent}>
+            {screen === 'main' && activeTab === 'home' && (
+              <Home
+                onLogout={() => {
+                  setActiveTab('home');
+                  setScreen('login');
+                }}
+                onSelectCourse={(course) => {
+                  setSelectedCourse(course);
+                  setScreen('courseDetail');
+                }}
+              />
+            )}
+            {screen === 'main' && activeTab === 'courses' && (
+              <CoursesScreen onSelectCourse={(course) => {
+                setSelectedCourse(course);
+                setScreen('courseDetail');
+              }} />
+            )}
+            {screen === 'main' && activeTab === 'grades' && <GradesScreen />}
+            {screen === 'main' && activeTab === 'schedule' && <ScheduleScreen />}
+            {screen === 'main' && activeTab === 'notifications' && <NotificationsScreen />}
+            {screen === 'main' && activeTab === 'profile' && (
+              <ProfileScreen onLogout={() => {
+                setActiveTab('home');
+                setScreen('login');
+              }} />
+            )}
+          </View>
+          <View style={styles.tabBar}>
+            {([
+              ['home', 'Басты'],
+              ['courses', 'Курстар'],
+              ['grades', 'Бағалар'],
+              ['schedule', 'Кесте'],
+              ['notifications', 'Хабарлар'],
+              ['profile', 'Профиль'],
+            ] as const).map(([tab, label]) => (
+              <TouchableOpacity
+                key={tab}
+                style={[styles.tabItem, activeTab === tab && styles.activeTabItem]}
+                onPress={() => setActiveTab(tab)}
+              >
+                <Text style={[styles.tabText, activeTab === tab && styles.activeTabText]}>{label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      )}
+
+      {screen === 'courseDetail' && (
+        <CourseDetailScreen
+          course={selectedCourse}
+          onBack={() => setScreen('main')}
         />
       )}
     </SafeAreaView>
@@ -68,6 +138,13 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#7b1fa2' },
+  appContainer: { flex: 1, backgroundColor: '#f8f9fa' },
+  mainContent: { flex: 1 },
+  tabBar: { flexDirection: 'row', backgroundColor: '#fff', borderTopWidth: 1, borderTopColor: '#eee', paddingBottom: 4 },
+  tabItem: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingVertical: 10 },
+  activeTabItem: { borderTopWidth: 2, borderTopColor: '#7b1fa2' },
+  tabText: { color: '#777', fontSize: 10, textAlign: 'center' },
+  activeTabText: { color: '#7b1fa2', fontWeight: 'bold' },
   splashContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
   logoCircle: { width: 90, height: 90, borderRadius: 45, backgroundColor: 'rgba(255, 255, 255, 0.2)', justifyContent: 'center', alignItems: 'center', marginBottom: 20 },
   logoText: { fontSize: 40 },
@@ -81,5 +158,5 @@ const styles = StyleSheet.create({
   slideSubtitle: { fontSize: 14, color: '#666', textAlign: 'center', marginBottom: 30 },
   nextButton: { backgroundColor: '#7b1fa2', width: '100%', paddingVertical: 14, borderRadius: 25, alignItems: 'center', marginBottom: 15 },
   nextButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
-  skipText: { color: '#fff', fontSize: 14, textAlign: 'center' },
+  skipText: { color: '#7b1fa2', fontSize: 14, textAlign: 'center' },
 });

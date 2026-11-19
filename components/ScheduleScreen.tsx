@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native';
 
-export default function CoursesScreen({ onSelectCourse }: any) {
+export default function ScheduleScreen() {
   const courses = [
     { id: '1', title: 'Web-бағдарламалау фреймворктары', teacher: 'А. Есимова', code: 'WBF-22' },
     { id: '2', title: 'Деректер қорын басқару', teacher: 'М. Қантөреұлы', code: 'DBM-19' },
@@ -14,13 +14,13 @@ export default function CoursesScreen({ onSelectCourse }: any) {
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.headerTitle}>Барлық пәндер</Text>
         {courses.map((course) => (
-          <TouchableOpacity key={course.id} style={styles.card} onPress={onSelectCourse}>
+          <View key={course.id} style={styles.card}>
             <View>
               <Text style={styles.title}>{course.title}</Text>
               <Text style={styles.teacher}>Оқытушы: {course.teacher}</Text>
             </View>
             <Text style={styles.code}>{course.code}</Text>
-          </TouchableOpacity>
+          </View>
         ))}
       </ScrollView>
     </SafeAreaView>

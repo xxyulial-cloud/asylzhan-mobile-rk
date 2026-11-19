@@ -1,8 +1,19 @@
 import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 
-export default function CoursesScreen({ onSelectCourse }: any) {
-  const courses = [
+export type Course = {
+  id: string;
+  title: string;
+  teacher: string;
+  code: string;
+};
+
+type CoursesScreenProps = {
+  onSelectCourse: (course: Course) => void;
+};
+
+export default function CoursesScreen({ onSelectCourse }: CoursesScreenProps) {
+  const courses: Course[] = [
     { id: '1', title: 'Web-бағдарламалау фреймворктары', teacher: 'А. Есимова', code: 'WBF-22' },
     { id: '2', title: 'Деректер қорын басқару', teacher: 'М. Қантөреұлы', code: 'DBM-19' },
     { id: '3', title: 'Желілік қауіпсіздік негіздері', teacher: 'С. Нұрасыл', code: 'NSC-04' },
@@ -14,7 +25,7 @@ export default function CoursesScreen({ onSelectCourse }: any) {
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.headerTitle}>Барлық пәндер</Text>
         {courses.map((course) => (
-          <TouchableOpacity key={course.id} style={styles.card} onPress={onSelectCourse}>
+          <TouchableOpacity key={course.id} style={styles.card} onPress={() => onSelectCourse(course)}>
             <View>
               <Text style={styles.title}>{course.title}</Text>
               <Text style={styles.teacher}>Оқытушы: {course.teacher}</Text>

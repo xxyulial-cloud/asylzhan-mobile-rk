@@ -1,7 +1,18 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ScrollView, TextInput } from 'react-native';
+import { Course } from './CoursesScreen';
 
-export default function Home({ onLogout }: any) {
+type HomeProps = {
+  onLogout: () => void;
+  onSelectCourse: (course: Course) => void;
+};
+
+export default function Home({ onLogout, onSelectCourse }: HomeProps) {
+  const trendingCourses: Course[] = [
+    { id: '1', title: 'Web Фреймворктар және React', teacher: 'А. Есимова', code: 'WBF-22' },
+    { id: '2', title: 'Деректер қорын басқару', teacher: 'М. Қантөреұлы', code: 'DBM-19' },
+  ];
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
@@ -50,25 +61,17 @@ export default function Home({ onLogout }: any) {
           <Text style={styles.sectionTitle}>Университеттегі танымал</Text>
         </View>
         
-        <View style={styles.courseCard}>
+        {trendingCourses.map((course) => (
+        <TouchableOpacity key={course.id} style={styles.courseCard} onPress={() => onSelectCourse(course)}>
           <View style={styles.courseImagePlaceholder}>
-            <Text style={styles.courseEmoji}>💻</Text>
+            <Text style={styles.courseEmoji}>{course.id === '1' ? '💻' : '📊'}</Text>
           </View>
           <View style={styles.courseInfo}>
-            <Text style={styles.courseTitle}>Web Фреймворктар және React</Text>
-            <Text style={styles.courseDesc}>Күрделі фронтенд әзірлеу</Text>
+            <Text style={styles.courseTitle}>{course.title}</Text>
+            <Text style={styles.courseDesc}>{course.code}</Text>
           </View>
-        </View>
-
-        <View style={styles.courseCard}>
-          <View style={styles.courseImagePlaceholder}>
-            <Text style={styles.courseEmoji}>📊</Text>
-          </View>
-          <View style={styles.courseInfo}>
-            <Text style={styles.courseTitle}>Деректер қорын басқару</Text>
-            <Text style={styles.courseDesc}>PostgreSQL және pgAdmin 4</Text>
-          </View>
-        </View>
+        </TouchableOpacity>
+        ))}
 
       </ScrollView>
     </SafeAreaView>

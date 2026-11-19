@@ -1,21 +1,53 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
 
-export default function Login({ navigation, onSwitchToSignup, onBackToHome }: any) {
+type LoginProps = {
+  onLogin: () => void;
+  onSwitchToSignup: () => void;
+  onBackToHome: () => void;
+};
+
+export default function Login({ onLogin, onSwitchToSignup, onBackToHome }: LoginProps) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = () => {
+    if (!email.trim() || !password) {
+      Alert.alert('Қате', 'Email мен құпиясөзді толтырыңыз.');
+      return;
+    }
+    onLogin();
+  };
+
   return (
     <View style={styles.authContainer}>
       <Text style={styles.authHeader}>Welcome Back!</Text>
       <Text style={styles.authSubHeader}>Log in to continue</Text>
 
-      <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#aaa" keyboardType="email-address" />
-      <TextInput style={styles.input} placeholder="Password" placeholderTextColor="#aaa" secureTextEntry />
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        placeholderTextColor="#aaa"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        value={email}
+        onChangeText={setEmail}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        placeholderTextColor="#aaa"
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
+      />
 
-      <TouchableOpacity style={styles.authButton} onPress={() => alert("Logged in successfully!")}>
+      <TouchableOpacity style={styles.authButton} onPress={handleLogin}>
         <Text style={styles.authButtonText}>Log In</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={onSwitchToSignup}>
-        <Text style={styles.switchText}>Don't have an account? <Text style={styles.linkText}>Sign up</Text></Text>
+        <Text style={styles.switchText}>Аккаунт жоқ па? <Text style={styles.linkText}>Тіркелу</Text></Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.backLink} onPress={onBackToHome}>

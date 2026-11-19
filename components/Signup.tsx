@@ -1,17 +1,35 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
 
-export default function Signup({ onSwitchToLogin, onBackToHome }: any) {
+type SignupProps = {
+  onSwitchToLogin: () => void;
+  onBackToHome: () => void;
+  onSignup: () => void;
+};
+
+export default function Signup({ onSwitchToLogin, onBackToHome, onSignup }: SignupProps) {
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSignup = () => {
+    if (!fullName.trim() || !email.trim() || password.length < 6) {
+      Alert.alert('Қате', 'Аты-жөнін толтырыңыз, email енгізіңіз және құпиясөз кемінде 6 таңбадан тұрсын.');
+      return;
+    }
+    onSignup();
+  };
+
   return (
     <View style={styles.authContainer}>
       <Text style={styles.authHeader}>Create Account</Text>
       <Text style={styles.authSubHeader}>Sign up to get started</Text>
 
-      <TextInput style={styles.input} placeholder="Full Name" placeholderTextColor="#aaa" />
-      <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#aaa" keyboardType="email-address" />
-      <TextInput style={styles.input} placeholder="Password" placeholderTextColor="#aaa" secureTextEntry />
+      <TextInput style={styles.input} placeholder="Full Name" placeholderTextColor="#aaa" value={fullName} onChangeText={setFullName} />
+      <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#aaa" keyboardType="email-address" autoCapitalize="none" value={email} onChangeText={setEmail} />
+      <TextInput style={styles.input} placeholder="Password" placeholderTextColor="#aaa" secureTextEntry value={password} onChangeText={setPassword} />
 
-      <TouchableOpacity style={styles.authButton} onPress={() => alert("Registered successfully!")}>
+      <TouchableOpacity style={styles.authButton} onPress={handleSignup}>
         <Text style={styles.authButtonText}>Sign Up</Text>
       </TouchableOpacity>
 
